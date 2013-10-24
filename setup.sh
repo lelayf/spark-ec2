@@ -11,8 +11,8 @@ source ec2-variables.sh
 
 # Set hostname based on EC2 private DNS name, so that it is set correctly
 # even if the instance is restarted with a different private DNS name
-PRIVATE_DNS=`wget -q -O - http://instance-data.ec2.internal/latest/meta-data/local-hostname`
-PUBLIC_DNS=`wget -q -O - http://instance-data.ec2.internal/latest/meta-data/hostname`
+PRIVATE_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname`
+PUBLIC_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/hostname`
 hostname $PRIVATE_DNS
 echo $PRIVATE_DNS > /etc/hostname
 export HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
@@ -133,7 +133,7 @@ chmod u+x /root/spark/conf/spark-env.sh
 /root/spark-ec2/copy-dir /root/spark/conf
 
 # Add SPARK_PUBLIC_DNS to bash_profile to have it be found by user apps
-SPARK_PUBLIC_DNS=`wget -q -O - http://instance-data.ec2.internal/latest/meta-data/public-hostname`
+SPARK_PUBLIC_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname`
 echo "export SPARK_PUBLIC_DNS=$SPARK_PUBLIC_DNS" >> ~/.bash_profile
 
 # Setup each module
