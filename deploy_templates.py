@@ -25,27 +25,31 @@ slave_ram_kb = int(os.popen(slave_mem_command).read().strip())
 system_ram_kb = min(slave_ram_kb, master_ram_kb)
 
 system_ram_mb = system_ram_kb / 1024
-if system_ram_mb > 20*1024:
-  # Leave 3 GB for the OS, HDFS and buffer cache
-  spark_mb = system_ram_mb - 3 * 1024
+# Leave some RAM for the OS, Hadoop daemons, and system caches
+if system_ram_mb > 100*1024:
+  spark_mb = system_ram_mb - 15 * 1024 # Leave 15 GB RAM
+elif system_ram_mb > 60*1024:
+  spark_mb = system_ram_mb - 10 * 1024 # Leave 10 GB RAM
+elif system_ram_mb > 40*1024:
+  spark_mb = system_ram_mb - 6 * 1024 # Leave 6 GB RAM
+elif system_ram_mb > 20*1024:
+  spark_mb = system_ram_mb - 3 * 1024 # Leave 3 GB RAM
 elif system_ram_mb > 10*1024:
-  # Leave 2 GB for the OS & co.
-  spark_mb = system_ram_mb - 2 * 1024
+  spark_mb = system_ram_mb - 2 * 1024 # Leave 2 GB RAM
 else:
-  # Leave 1.3 GB for the OS & co. Note that this must be more than
-  # 1 GB because Mesos leaves 1 GB free and requires 32 MB/task.
-  spark_mb = max(512, system_ram_mb - 1300)
+  spark_mb = max(512, system_ram_mb - 1300) # Leave 1.3 GB RAM
 
 template_vars = {
-  "master_list": os.getenv("MESOS_MASTERS"),
-  "active_master": os.getenv("MESOS_MASTERS").split("\n")[0],
-  "slave_list": os.getenv("MESOS_SLAVES"),
-  "zoo_list": os.getenv("MESOS_ZOO_LIST"),
-  "cluster_url": os.getenv("MESOS_CLUSTER_URL"),
-  "hdfs_data_dirs": os.getenv("MESOS_HDFS_DATA_DIRS"),
-  "mapred_local_dirs": os.getenv("MESOS_MAPRED_LOCAL_DIRS"),
-  "spark_local_dirs": os.getenv("MESOS_SPARK_LOCAL_DIRS"),
+  "master_list": os.getenv("MASTERS"),
+  "active_master": os.getenv("MASTERS").split("\n")[0],
+  "slave_list": os.getenv("SLAVES"),
+  "hdfs_data_dirs": os.getenv("HDFS_DATA_DIRS"),
+  "mapred_local_dirs": os.getenv("MAPRED_LOCAL_DIRS"),
+  "spark_local_dirs": os.getenv("SPARK_LOCAL_DIRS"),
   "default_spark_mem": "%dm" % spark_mb,
+  "spark_version": os.getenv("SPARK_VERSION"),
+  "shark_version": os.getenv("SHARK_VERSION"),
+  "hadoop_major_version": os.getenv("HADOOP_MAJOR_VERSION"),
   "scala_home": os.getenv("SCALA_HOME"),
   "java_home": os.getenv("JAVA_HOME")
 }
