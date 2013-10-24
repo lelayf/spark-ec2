@@ -14,6 +14,7 @@ tar -xzf mysql-connector-java-5.1.26.tar.gz
 
 cp mysql-connector-java-5.1.26/mysql-connector-java-5.1.26-bin.jar sqoop/lib/
 rm -rf mysql-connector-java-5.1.26
+rm mysql-connector-java-5.1.26.tar.gz
 
 hadoop fs -copyToLocal s3n://viadeo-bi/sqoop-site.xml sqoop-site.xml 
 mv sqoop-site.xml sqoop/conf
