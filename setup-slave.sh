@@ -12,6 +12,12 @@ hostname $PRIVATE_DNS
 echo $PRIVATE_DNS > /etc/hostname
 HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 
+AZ=`wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone`
+IPV4=`wget -q -O - http://169.254.169.254/latest/meta-data/local-ipv4`
+cat >> /etc/hosts <<EOF
+$IPV4 $PRIVATE_DNS $PRIVATE_DNS.$AZ.compute.internal
+EOF
+
 echo "Setting up slave on `hostname`..."
 
 # Mount options to use for ext3 and xfs disks (the ephemeral disks
