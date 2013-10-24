@@ -51,7 +51,9 @@ template_vars = {
   "shark_version": os.getenv("SHARK_VERSION"),
   "hadoop_major_version": os.getenv("HADOOP_MAJOR_VERSION"),
   "scala_home": os.getenv("SCALA_HOME"),
-  "java_home": os.getenv("JAVA_HOME")
+  "java_home": os.getenv("JAVA_HOME"),
+  "awssak" : os.getenv("AWSSAK"),
+  "awsakid" : os.getenv("AWSAKID")
 }
 
 template_dir="/root/spark-ec2/templates"

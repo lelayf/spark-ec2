@@ -40,4 +40,24 @@
     <value>3000</value>
   </property>
 
+  <property>
+    <name>fs.s3n.awsAccessKeyId</name>
+    <value>{{awsakid}}</value>
+  </property>
+
+  <property>
+    <name>fs.s3n.awsSecretAccessKey</name>
+    <value>{{awssak}}</value>
+  </property>
+
+  <property>
+    <name>fs.s3.awsAccessKeyId</name>
+    <value>{{awsakid}}</value>
+  </property>
+
+  <property>
+    <name>fs.s3.awsSecretAccessKey</name>
+    <value>{{awssak}}</value>
+  </property>
+
 </configuration>
