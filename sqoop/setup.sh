@@ -4,26 +4,27 @@ pushd /root
 
 export PATH=$PATH:/root/ephemeral-hdfs/bin
 
-hadoop fs -copyToLocal s3://viadeo-bi/sqoop-1.4.4.bin__hadoop-1.0.0.tar.gz sqoop-1.4.4.bin__hadoop-1.0.0.tar.gz
+hadoop fs -copyToLocal s3n://viadeo-bi/sqoop-1.4.4.bin__hadoop-1.0.0.tar.gz sqoop-1.4.4.bin__hadoop-1.0.0.tar.gz
 tar -xzf sqoop-1.4.4.bin__hadoop-1.0.0.tar.gz
+mv sqoop-1.4.4.bin__hadoop-1.0.0 sqoop
 
-hadoop fs -copyToLocal s3://viadeo-bi/mysql-connector-java-5.1.26.tar.gz mysql-connector-java-5.1.26.tar.gz
+hadoop fs -copyToLocal s3n://viadeo-bi/mysql-connector-java-5.1.26.tar.gz mysql-connector-java-5.1.26.tar.gz
 tar -xzf mysql-connector-java-5.1.26.tar.gz
 
-cp mysql-connector-java-5.1.26/mysql-connector-java-5.1.26-bin.jar sqoop-1.4.4.bin__hadoop-1.0.0/lib/
+cp mysql-connector-java-5.1.26/mysql-connector-java-5.1.26-bin.jar sqoop/lib/
 
-hadoop fs -copyToLocal s3://viadeo-bi/sqoop-site.xml sqoop-site.xml 
-cp sqoop-site.xml sqoop-1.4.4.bin__hadoop-1.0.0/conf
+hadoop fs -copyToLocal s3n://viadeo-bi/sqoop-site.xml sqoop-site.xml 
+cp sqoop-site.xml sqoop/conf
 
 cat >> ~/.bashrc <<EOF 
-export PATH=$PATH:/home/hadoop/sqoop-1.4.4.bin__hadoop-1.0.0/bin
+export PATH=$PATH:/root/sqoop/bin
 EOF
 
 . ~/.bashrc
 
-popd
+/root/spark-ec2/copy-dir /root/sqoop
 
-/root/spark-ec2/copy-dir /root/sqoop-1.4.4.bin__hadoop-1.0.0
+popd
 
 
 
