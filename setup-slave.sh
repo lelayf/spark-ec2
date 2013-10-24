@@ -18,6 +18,10 @@ cat >> /etc/hosts <<EOF
 $IPV4 $PRIVATE_DNS $PRIVATE_DNS.$AZ.compute.internal
 EOF
 
+if [[ -e private_master ]]; then
+  cat private_master >> /etc/hosts
+fi
+
 echo "Setting up slave on `hostname`..."
 
 # Mount options to use for ext3 and xfs disks (the ephemeral disks
