@@ -14,7 +14,7 @@ source ec2-variables.sh
 PRIVATE_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname`
 PUBLIC_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname`
 sudo hostname $PRIVATE_DNS
-sudo echo $PRIVATE_DNS > /etc/hostname
+echo $PRIVATE_DNS | sudo tee -a /etc/hostname
 export HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 
 AZ=`wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone`
