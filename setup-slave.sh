@@ -9,17 +9,17 @@ source ec2-variables.sh
 # even if the instance is restarted with a different private DNS name
 PRIVATE_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname`
 sudo hostname $PRIVATE_DNS
-sudo echo $PRIVATE_DNS > /etc/hostname
+echo $PRIVATE_DNS | sudo tee -a /etc/hostname
 HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 
 AZ=`wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone`
 IPV4=`wget -q -O - http://169.254.169.254/latest/meta-data/local-ipv4`
-sudo cat >> /etc/hosts <<EOF
+cat <<EOF | sudo tee -a /etc/hosts
 $IPV4 $PRIVATE_DNS $PRIVATE_DNS.$AZ.compute.internal
 EOF
 
 if [[ -e private_master ]]; then
-  sudo cat private_master >> /etc/hosts
+  cat private_master | sudo tee -a /etc/hosts
 fi
 
 echo "Setting up slave on `hostname`..."
@@ -63,7 +63,7 @@ rm -f $HOME/.ssh/known_hosts
 $HOME/spark-ec2/create-swap.sh $SWAP_MB
 
 # Allow memory to be over committed. Helps in pyspark where we fork
-sudo echo 1 > /proc/sys/vm/overcommit_memory
+echo 1 | sudo tee /proc/sys/vm/overcommit_memory
 
 # Add github to known hosts to get git@github.com clone to work
 # TODO(shivaram): Avoid duplicate entries ?
