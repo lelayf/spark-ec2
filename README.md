@@ -11,7 +11,7 @@ please refer to http://spark-project.org/docs/latest/ec2-scripts.html
 
 The Spark cluster setup is guided by the values set in `ec2-variables.sh`.`setup.sh`
 first performs basic operations like enabling ssh across machines, mounting ephemeral
-drives and also creates files named `/root/spark-ec2/masters`, and `/root/spark-ec2/slaves`.
+drives and also creates files named `$HOME/spark-ec2/masters`, and `$HOME/spark-ec2/slaves`.
 Following that every module listed in `MODULES` is initialized. 
 
 To add a new module, you will need to do the following:
@@ -39,7 +39,7 @@ and can be used to install any pre-requisites.
    
    d. Add a file named `setup.sh` to launch any services on the master/slaves. This is called
    after the templates have been configured. You can use the environment variables `$SLAVES` to
-   get a list of slave hostnames and `/root/spark-ec2/copy-dir` to sync a directory across machines.
+   get a list of slave hostnames and `$HOME/spark-ec2/copy-dir` to sync a directory across machines.
       
    e. Modify https://github.com/mesos/spark/blob/master/ec2/spark_ec2.py to add your module to
    the list of enabled modules.

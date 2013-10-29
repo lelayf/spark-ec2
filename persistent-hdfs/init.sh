@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pushd /root
+pushd $HOME
 
 if [ -d "persistent-hdfs" ]; then
   echo "Persistent HDFS seems to be installed. Exiting."
@@ -23,14 +23,14 @@ case "$HADOOP_MAJOR_VERSION" in
     mv hadoop-2.0.0-cdh4.2.0/ persistent-hdfs/
 
     # Have single conf dir
-    rm -rf /root/persistent-hdfs/etc/hadoop/
-    ln -s /root/persistent-hdfs/conf /root/persistent-hdfs/etc/hadoop
+    rm -rf $HOME/persistent-hdfs/etc/hadoop/
+    ln -s $HOME/persistent-hdfs/conf $HOME/persistent-hdfs/etc/hadoop
     ;;
 
   *)
      echo "ERROR: Unknown Hadoop version"
      return -1
 esac
-cp /root/hadoop-native/* /root/persistent-hdfs/lib/native/
-/root/spark-ec2/copy-dir /root/persistent-hdfs
+cp $HOME/hadoop-native/* $HOME/persistent-hdfs/lib/native/
+$HOME/spark-ec2/copy-dir $HOME/persistent-hdfs
 popd

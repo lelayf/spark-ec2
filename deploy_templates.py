@@ -16,7 +16,7 @@ mem_command = "cat /proc/meminfo | grep MemTotal | awk '{print $2}'"
 master_ram_kb = int(
   os.popen(mem_command).read().strip())
 # This is the master's memory. Try to find slave's memory as well
-first_slave = os.popen("cat /root/spark-ec2/slaves | head -1").read().strip()
+first_slave = os.popen("cat $HOME/spark-ec2/slaves | head -1").read().strip()
 
 slave_mem_command = "ssh -t -o StrictHostKeyChecking=no %s %s" %\
         (first_slave, mem_command)
@@ -56,7 +56,7 @@ template_vars = {
   "awsakid" : os.getenv("AWSAKID")
 }
 
-template_dir="/root/spark-ec2/templates"
+template_dir="$HOME/spark-ec2/templates"
 
 for path, dirs, files in os.walk(template_dir):
   if path.find(".svn") == -1:

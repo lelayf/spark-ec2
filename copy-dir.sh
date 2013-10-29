@@ -32,7 +32,7 @@ DIR=`readlink -f "$1"`
 DIR=`echo "$DIR"|sed 's@/$@@'`
 DEST=`dirname "$DIR"`
 
-SLAVES=`cat /root/spark-ec2/slaves`
+SLAVES=`cat $HOME/spark-ec2/slaves`
 
 SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=5"
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pushd /root
+pushd $HOME
 
 if [ -d "spark" ]; then
   echo "Spark seems to be installed. Exiting."

@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Make sure we are in the spark-ec2 directory
-cd /root/spark-ec2
+cd $HOME/spark-ec2
 
 # Load the environment variables specific to this AMI
-source /root/.bash_profile
+source $HOME/.bash_profile
 
 # Load the cluster variables set by the deploy script
 source ec2-variables.sh
@@ -91,10 +91,10 @@ while [ "e$TODO" != "e" ] && [ $TRIES -lt 4 ] ; do
   fi
 done
 
-echo "RSYNC'ing /root/spark-ec2 to other cluster nodes..."
+echo "RSYNC'ing $HOME/spark-ec2 to other cluster nodes..."
 for node in $SLAVES $OTHER_MASTERS; do
   echo $node
-  rsync -e "ssh $SSH_OPTS" -az /root/spark-ec2 $node:/root &
+  rsync -e "ssh $SSH_OPTS" -az $HOME/spark-ec2 $node:$HOME &
   scp $SSH_OPTS ~/.ssh/id_rsa $node:.ssh &
   sleep 0.3
 done
@@ -105,7 +105,7 @@ wait
 echo "Running slave setup script on other cluster nodes..."
 for node in $SLAVES $OTHER_MASTERS; do
   echo $node
-  ssh -t -t $SSH_OPTS root@$node "spark-ec2/setup-slave.sh" & sleep 0.3
+  ssh -t -t $SSH_OPTS $LOGNAME@$node "spark-ec2/setup-slave.sh" & sleep 0.3
 done
 wait
 
@@ -117,7 +117,7 @@ for module in $MODULES; do
   if [[ -e $module/init.sh ]]; then
     source $module/init.sh
   fi
-  cd /root/spark-ec2  # guard against init.sh changing the cwd
+  cd $HOME/spark-ec2  # guard against init.sh changing the cwd
 done
 
 # Deploy templates
@@ -127,8 +127,8 @@ echo "Creating local config files..."
 
 # Copy spark conf by default
 echo "Deploying Spark config files..."
-chmod u+x /root/spark/conf/spark-env.sh
-/root/spark-ec2/copy-dir /root/spark/conf
+chmod u+x $HOME/spark/conf/spark-env.sh
+$HOME/spark-ec2/copy-dir $HOME/spark/conf
 
 # Add SPARK_PUBLIC_DNS to bash_profile to have it be found by user apps
 SPARK_PUBLIC_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname`
@@ -139,5 +139,5 @@ for module in $MODULES; do
   echo "Setting up $module"
   source ./$module/setup.sh
   sleep 1
-  cd /root/spark-ec2  # guard against setup.sh changing the cwd
+  cd $HOME/spark-ec2  # guard against setup.sh changing the cwd
 done

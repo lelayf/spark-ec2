@@ -1,4 +1,4 @@
 #!/bin/bash
 
-/root/spark-ec2/copy-dir /root/shark
-/root/spark-ec2/copy-dir /root/hive*
+$HOME/spark-ec2/copy-dir $HOME/shark
+$HOME/spark-ec2/copy-dir $HOME/hive*

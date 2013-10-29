@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Make sure we are in the spark-ec2 directory
-cd /root/spark-ec2
+cd $HOME/spark-ec2
 
 source ec2-variables.sh
 
@@ -57,14 +57,14 @@ chmod -R a+w /mnt*
 
 # Remove ~/.ssh/known_hosts because it gets polluted as you start/stop many
 # clusters (new machines tend to come up under old hostnames)
-rm -f /root/.ssh/known_hosts
+rm -f $HOME/.ssh/known_hosts
 
 # Create swap space on /mnt
-/root/spark-ec2/create-swap.sh $SWAP_MB
+$HOME/spark-ec2/create-swap.sh $SWAP_MB
 
 # Allow memory to be over committed. Helps in pyspark where we fork
 echo 1 > /proc/sys/vm/overcommit_memory
 
 # Add github to known hosts to get git@github.com clone to work
 # TODO(shivaram): Avoid duplicate entries ?
-cat /root/spark-ec2/github.hostkey >> /root/.ssh/known_hosts
+cat $HOME/spark-ec2/github.hostkey >> $HOME/.ssh/known_hosts

@@ -11,9 +11,9 @@ export JAVA_HOME=/usr/lib/jvm/java-1.7.0
 # Extra Java CLASSPATH elements.  Optional.
 # export HADOOP_CLASSPATH=
 
-# NOTE: Set this to /root/mapreduce so that start-mapred.sh works correctly
-export HADOOP_HOME="/root/mapreduce"
-export HADOOP_MAPREDUCE_HOME="/root/mapreduce"
+# NOTE: Set this to $HOME/mapreduce so that start-mapred.sh works correctly
+export HADOOP_HOME="$HOME/mapreduce"
+export HADOOP_MAPREDUCE_HOME="$HOME/mapreduce"
 
 # The maximum amount of heap to use, in MB. Default is 1000.
 export HADOOP_HEAPSIZE=1000

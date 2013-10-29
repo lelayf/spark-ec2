@@ -1,27 +1,27 @@
 #!/bin/bash
 
 # Copy the slaves to spark conf
-cp /root/spark-ec2/slaves /root/spark/conf/
-/root/spark-ec2/copy-dir /root/spark/conf
+cp $HOME/spark-ec2/slaves $HOME/spark/conf/
+$HOME/spark-ec2/copy-dir $HOME/spark/conf
 
 # Set cluster-url to standalone master
-echo "spark://""`cat /root/spark-ec2/masters`"":7077" > /root/spark-ec2/cluster-url
-/root/spark-ec2/copy-dir /root/spark-ec2
+echo "spark://""`cat $HOME/spark-ec2/masters`"":7077" > $HOME/spark-ec2/cluster-url
+$HOME/spark-ec2/copy-dir $HOME/spark-ec2
 
 # The Spark master seems to take time to start and workers crash if
 # they start before the master. So start the master first, sleep and then start
 # workers.
 
 # Stop anything that is running
-/root/spark/bin/stop-all.sh
+$HOME/spark/bin/stop-all.sh
 
 sleep 2
 
 # Start Master
-/root/spark/bin/start-master.sh
+$HOME/spark/bin/start-master.sh
 
 # Pause
 sleep 20
 
 # Start Workers
-/root/spark/bin/start-slaves.sh
+$HOME/spark/bin/start-slaves.sh
