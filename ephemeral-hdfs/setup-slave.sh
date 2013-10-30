@@ -1,17 +1,17 @@
 #!/bin/bash
 
 # Setup ephemeral-hdfs
-mkdir -p /mnt/ephemeral-hdfs/logs
-mkdir -p /mnt/hadoop-logs
+sudo mkdir -p /mnt/ephemeral-hdfs/logs
+sudo mkdir -p /mnt/hadoop-logs
 
 # Create Hadoop and HDFS directories in a given parent directory
 # (for example /mnt, /mnt2, and so on)
 function create_hadoop_dirs {
   location=$1
   if [[ -e $location ]]; then
-    mkdir -p $location/ephemeral-hdfs $location/hadoop/tmp
-    chmod -R 755 $location/ephemeral-hdfs
-    mkdir -p $location/hadoop/mrlocal $location/hadoop/mrlocal2
+    sudo mkdir -p $location/ephemeral-hdfs $location/hadoop/tmp
+    sudo chmod -R 755 $location/ephemeral-hdfs
+    sudo mkdir -p $location/hadoop/mrlocal $location/hadoop/mrlocal2
   fi
 }
 
