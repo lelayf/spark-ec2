@@ -36,7 +36,8 @@ else
       if [[ "$HADOOP_MAJOR_VERSION" == "1" ]]; then
         wget http://d3kbcqa49mib13.cloudfront.net/spark-0.8.0-incubating-bin-hadoop1.tgz
       else
-        wget http://d3kbcqa49mib13.cloudfront.net/spark-0.8.0-incubating-bin-cdh4.tgz
+        wget http://dzu9up16gax83.cloudfront.net/download/spark-0.8.0-incubating-hadoop-2.0.0-cdh4.1.2.tar.gz
+        #wget http://d3kbcqa49mib13.cloudfront.net/spark-0.8.0-incubating-bin-cdh4.tgz
       fi
       ;;    
     *)

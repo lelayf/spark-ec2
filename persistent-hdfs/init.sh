@@ -16,7 +16,8 @@ case "$HADOOP_MAJOR_VERSION" in
     mv hadoop-1.0.4/ persistent-hdfs/
     ;;
   2)
-    wget http://d3kbcqa49mib13.cloudfront.net/hadoop-2.0.0-cdh4.2.0.tar.gz
+    #wget http://d3kbcqa49mib13.cloudfront.net/hadoop-2.0.0-cdh4.2.0.tar.gz
+    wget http://dzu9up16gax83.cloudfront.net/download/hadoop-2.0.0-cdh4.1.2.tar.gz
     echo "Unpacking Hadoop"
     tar xvzf hadoop-*.tar.gz > /tmp/spark-ec2_hadoop.log
     rm hadoop-*.tar.gz

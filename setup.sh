@@ -27,8 +27,8 @@ EOF
 echo "Setting up Spark on `hostname`..."
 
 # Set up the masters, slaves, etc files based on cluster env variables
-rm -q masters
-rm -q slaves
+rm masters
+rm slaves
 for n in $MASTERS; do
         echo $n >> masters
 done
