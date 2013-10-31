@@ -56,7 +56,7 @@ template_vars = {
   "awsakid" : os.getenv("AWSAKID")
 }
 
-template_dir="$HOME/spark-ec2/templates"
+template_dir= os.getenv("HOME") + "/spark-ec2/templates"
 
 for path, dirs, files in os.walk(template_dir):
   if path.find(".svn") == -1:

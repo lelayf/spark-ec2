@@ -27,8 +27,14 @@ EOF
 echo "Setting up Spark on `hostname`..."
 
 # Set up the masters, slaves, etc files based on cluster env variables
-echo "$MASTERS" > masters
-echo "$SLAVES" > slaves
+rm -q masters
+rm -q slaves
+for n in $MASTERS; do
+	echo $n >> masters
+done
+for n in $SLAVES; do 
+        echo $n >> slaves
+done
 
 MASTERS=`cat masters`
 NUM_MASTERS=`cat masters | wc -l`
