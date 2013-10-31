@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo ulimit -s unlimited 
+
 # Make sure we are in the spark-ec2 directory
 cd $HOME/spark-ec2
 
@@ -129,7 +131,7 @@ done
 # Deploy templates
 # TODO: Move configuring templates to a per-module ?
 echo "Creating local config files..."
-./deploy_templates.py
+sudo ./deploy_templates.py
 
 # Copy spark conf by default
 echo "Deploying Spark config files..."

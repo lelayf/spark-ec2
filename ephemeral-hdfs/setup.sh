@@ -23,12 +23,12 @@ if [ -f "$NAMENODE_DIR/current/VERSION" ] && [ -f "$NAMENODE_DIR/current/fsimage
   echo "Hadoop namenode appears to be formatted: skipping"
 else
   echo "Formatting ephemeral HDFS namenode..."
-  $EPHEMERAL_HDFS/bin/hadoop namenode -format
+  sudo $EPHEMERAL_HDFS/bin/hadoop namenode -format
 fi
 
 echo "Starting ephemeral HDFS..."
 # This is different depending on version. Simple hack: just try both.
-$EPHEMERAL_HDFS/sbin/start-dfs.sh
-$EPHEMERAL_HDFS/bin/start-dfs.sh
+sudo $EPHEMERAL_HDFS/sbin/start-dfs.sh
+sudo $EPHEMERAL_HDFS/bin/start-dfs.sh
 
 popd

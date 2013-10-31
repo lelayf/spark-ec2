@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo ulimit -s unlimited
+
 # Make sure we are in the spark-ec2 directory
 cd $HOME/spark-ec2
 
