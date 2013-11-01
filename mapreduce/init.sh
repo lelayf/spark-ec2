@@ -10,7 +10,7 @@ case "$HADOOP_MAJOR_VERSION" in
     wget http://dzu9up16gax83.cloudfront.net/download/mr1-2.0.0-mr1-cdh4.1.2.tar.gz
     tar -xvzf mr1-*.tar.gz > /tmp/spark-ec2_mapreduce.log
     rm mr1-*.tar.gz
-    mv hadoop-2.0.0-mr1-cdh4.2.0/ mapreduce/
+    mv hadoop-2.0.0-mr1-* mapreduce/
     ;;
 
   *)
