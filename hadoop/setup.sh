@@ -2,6 +2,7 @@
 
 pushd /root/spark-ec2/hadoop
 
+source ec2-variables.sh
 
 /root/spark-ec2/copy-dir /etc/hadoop/conf
 
@@ -11,18 +12,19 @@ done
 wait
 
 echo "Formatting persistent HDFS namenode..."
-su - hdfs
-hadoop namenode -format -force -nonInteractive
-exit
+sudo su -l hdfs -c "hadoop namenode -format -nonInteractive"
+wait
 
 /etc/init.d/hadoop-hdfs-namenode start
-for node in $SLAVES $OTHER_MASTERS; do
+wait
+for node in $SLAVES $MASTERS; do
   ssh -t $SSH_OPTS root@$node "/root/spark-ec2/hadoop/start-datanode.sh" & sleep 0.3
 done
 wait
 
 /etc/init.d/hadoop-yarn-resourcemanager start
-for node in $SLAVES $OTHER_MASTERS; do
+wait
+for node in $SLAVES $MASTERS; do
   ssh -t $SSH_OPTS root@$node "/root/spark-ec2/hadoop/start-nodemanager.sh" & sleep 0.3
 done
 wait
