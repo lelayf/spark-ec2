@@ -12,7 +12,12 @@ export JAVA_HOME={{java_home}}
 # export HADOOP_CLASSPATH=
 
 export HADOOP_HOME="/root/ephemeral-hdfs"
-export HADOOP_MAPREDUCE_HOME="/root/mapreduce"
+export HADOOP_MAPREDUCE_HOME="/root/ephemeral-hdfs/share/hadoop/mapreduce"
+export HADOOP_CONF_DIR="/root/ephemeral-hdfs/conf"
+export HADOOP_COMMON_HOME="/root/ephemeral-hdfs/share/hadoop/common"
+export HADOOP_HDFS_HOME="/root/ephemeral-hdfs/share/hadoop/hdfs"
+export HADOOP_MAPRED_HOME=$HADOOP_MAPREDUCE_HOME
+export YARN_HOME="/root/ephemeral-hdfs/share/hadoop/yarn"
 
 # The maximum amount of heap to use, in MB. Default is 1000.
 export HADOOP_HEAPSIZE=1000

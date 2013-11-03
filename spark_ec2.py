@@ -441,9 +441,11 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
     scp(master, opts, opts.identity_file, '~/.ssh/id_rsa')
     ssh(master, opts, 'chmod 600 ~/.ssh/id_rsa')
 
-  modules = ['spark', 'shark', 'ephemeral-hdfs', 'persistent-hdfs', 
-             'mapreduce', 'spark-standalone','sqoop']
-             
+  #modules = ['spark', 'shark', 'ephemeral-hdfs', 'persistent-hdfs', 
+  #           'mapreduce', 'spark-standalone','sqoop']
+
+  modules = ['hadoop', 'spark', 'shark', 'spark-standalone','sqoop']           
+
   if opts.hadoop_major_version == "1":
     modules = filter(lambda x: x != "mapreduce", modules)
 
@@ -550,8 +552,12 @@ def deploy_files(conn, root_dir, opts, master_nodes, slave_nodes, modules):
 
   template_vars = {
     "master_list": ' '.join([i.public_dns_name for i in master_nodes]),
+    "private_master_list": ' '.join([i.private_dns_name for i in master_nodes]),
+    "private_master_list_ip": ' '.join([i.private_ip_address for i in master_nodes]),
     "active_master": active_master,
     "slave_list": ' '.join([i.public_dns_name for i in slave_nodes]),
+    "private_slave_list": ' '.join([i.private_dns_name for i in slave_nodes]),
+    "private_slave_list_ip": ' '.join([i.private_ip_address for i in slave_nodes]),
     "cluster_url": cluster_url,
     "hdfs_data_dirs": hdfs_data_dirs,
     "mapred_local_dirs": mapred_local_dirs,

@@ -20,9 +20,27 @@ export HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
 AZ=`wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone`
 IPV4=`wget -q -O - http://169.254.169.254/latest/meta-data/local-ipv4`
 
-cat > private_master <<EOF
+export SLAVES_HOSTNAMES=($(for f in $SLAVES_PRIVATE_FQDN;do IFS=.; set $f; echo $1; done))
+unset IFS
+export SLAVES_IP_AR=($SLAVES_PRIVATE_IP)
+export SLAVES_FQDN_AR=($SLAVES_PRIVATE_FQDN)
+
+touch imthemaster
+
+count=0
+while [ "x${SLAVES_IP_AR[count]}" != "x" ]
+do
+   cat >> hosts.append <<EOF
+      $SLAVES_IP_AR[count]  $SLAVES_HOSTNAMES[count]  $SLAVES_FQDN_AR[count]
+   EOF
+   count=$(( $count + 1 ))
+done
+
+cat >> hosts.append <<EOF
 $IPV4 $PRIVATE_DNS $PRIVATE_DNS.$AZ.compute.internal
 EOF
+
+cat hosts.append | tee -a /etc/hosts
 
 echo "Setting up Spark on `hostname`..."
 
@@ -62,6 +80,8 @@ find . -regex "^.+.\(sh\|py\)" | xargs chmod a+x
 
 echo "Running setup-slave on master to mount filesystems, etc..."
 source ./setup-slave.sh
+
+rm imthemaster
 
 echo "SSH'ing to master machine(s) to approve key(s)..."
 for master in $MASTERS; do

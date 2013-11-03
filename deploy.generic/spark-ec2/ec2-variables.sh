@@ -20,6 +20,10 @@
 # These variables are automatically filled in by the spark-ec2 script.
 export MASTERS="{{master_list}}"
 export SLAVES="{{slave_list}}"
+export MASTERS_PRIVATE_FQDN="{{master_private_fqdn_list}}"
+export SLAVES_PRIVATE_FQDN="{{slave_private_fqdn_list}}"
+export MASTERS_PRIVATE_IP="{{master_private_ip_list}}"
+export SLAVES_PRIVATE_IP="{{slave_private_ip_list}}"
 export HDFS_DATA_DIRS="{{hdfs_data_dirs}}"
 export MAPRED_LOCAL_DIRS="{{mapred_local_dirs}}"
 export SPARK_LOCAL_DIRS="{{spark_local_dirs}}"
