@@ -11,7 +11,7 @@ fi
 
 if [[ ! -e /vol/persistent-hdfs/dfs/name ]] ; then
   echo "Formatting persistent HDFS namenode..."
-  hadoop namenode -format
+  hadoop namenode -format -force -nonInteractive
 fi
 
 /etc/init.d/hadoop-hdfs-namenode start
