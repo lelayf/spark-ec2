@@ -24,6 +24,7 @@ export SLAVES_HOSTNAMES=($(for f in $SLAVES_PRIVATE_FQDN;do IFS=.; set $f; echo 
 unset IFS
 export SLAVES_IP_AR=($SLAVES_PRIVATE_IP)
 export SLAVES_FQDN_AR=($SLAVES_PRIVATE_FQDN)
+export SLAVES_AR=($SLAVES)
 
 touch imthemaster
 
@@ -31,14 +32,14 @@ count=0
 while [ "x${SLAVES_IP_AR[$count]}" != "x" ]; do
    echo "Adding slave ${SLAVES_IP_AR[$count]} to hosts.append"
    #cat >> hosts.append <<EOA
-   echo "${SLAVES_IP_AR[$count]}  ${SLAVES_HOSTNAMES[$count]}  ${SLAVES_FQDN_AR[$count]}" | tee -a hosts.append
+   echo "${SLAVES_IP_AR[$count]}  ${SLAVES_AR[$count]}" | tee -a hosts.append
    #EOA
    count=$(( $count + 1 ))
 done
 
 echo "Adding master to hosts.append"
 cat >> hosts.append <<EOF
-$IPV4 $PRIVATE_DNS $PRIVATE_DNS.$AZ.compute.internal
+$IPV4 $PUBLIC_DNS
 EOF
 
 cat hosts.append | tee -a /etc/hosts
