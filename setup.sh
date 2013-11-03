@@ -13,9 +13,9 @@ source ec2-variables.sh
 # even if the instance is restarted with a different private DNS name
 PRIVATE_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname`
 PUBLIC_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname`
-hostname $PRIVATE_DNS
-echo $PRIVATE_DNS > /etc/hostname
-export HOSTNAME=$PRIVATE_DNS  # Fix the bash built-in hostname variable too
+hostname $PUBLIC_DNS
+echo $PUBLIC_DNS > /etc/hostname
+export HOSTNAME=`hostname` # Fix the bash built-in hostname variable too
 
 AZ=`wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone`
 IPV4=`wget -q -O - http://169.254.169.254/latest/meta-data/local-ipv4`
