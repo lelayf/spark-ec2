@@ -20,12 +20,12 @@
 <configuration>
   <property>
     <name>hadoop.tmp.dir</name>
-    <value>/vol/persistent-hdfs</value>
+    <value>/mnt/ephemeral-hdfs</value>
   </property>
 
   <property>
     <name>fs.default.name</name>
-    <value>hdfs://{{active_master}}:9010</value>
+    <value>hdfs://{{active_master}}:9000</value>
   </property>
 
   <property>

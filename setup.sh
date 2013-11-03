@@ -4,7 +4,7 @@
 cd /root/spark-ec2
 
 # Load the environment variables specific to this AMI
-source /root/.bash_profile
+touch /root/.bash_profile
 
 # Load the cluster variables set by the deploy script
 source ec2-variables.sh
@@ -28,14 +28,15 @@ export SLAVES_FQDN_AR=($SLAVES_PRIVATE_FQDN)
 touch imthemaster
 
 count=0
-while [ "x${SLAVES_IP_AR[count]}" != "x" ]
-do
-   cat >> hosts.append <<EOF
-      $SLAVES_IP_AR[count]  $SLAVES_HOSTNAMES[count]  $SLAVES_FQDN_AR[count]
-   EOF
+while [ "x${SLAVES_IP_AR[$count]}" != "x" ]; do
+   echo "Adding slave ${SLAVES_IP_AR[$count]} to hosts.append"
+   #cat >> hosts.append <<EOA
+   echo "${SLAVES_IP_AR[$count]}  ${SLAVES_HOSTNAMES[$count]}  ${SLAVES_FQDN_AR[$count]}" | tee -a hosts.append
+   #EOA
    count=$(( $count + 1 ))
 done
 
+echo "Adding master to hosts.append"
 cat >> hosts.append <<EOF
 $IPV4 $PRIVATE_DNS $PRIVATE_DNS.$AZ.compute.internal
 EOF
@@ -65,10 +66,10 @@ if [[ "x$JAVA_HOME" == "x" ]] ; then
     exit 1
 fi
 
-if [[ "x$SCALA_HOME" == "x" ]] ; then
-    echo "Expected SCALA_HOME to be set in .bash_profile!"
-    exit 1
-fi
+#if [[ "x$SCALA_HOME" == "x" ]] ; then
+#    echo "Expected SCALA_HOME to be set in .bash_profile!"
+#    exit 1
+#fi
 
 if [[ `tty` == "not a tty" ]] ; then
     echo "Expecting a tty or pty! (use the ssh -t option)."
