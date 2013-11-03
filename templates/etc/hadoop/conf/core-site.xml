@@ -24,7 +24,7 @@
   </property>
 
   <property>
-    <name>fs.default.name</name>
+    <name>fs.defaultFS</name>
     <value>hdfs://{{active_master}}:9000</value>
   </property>
 
