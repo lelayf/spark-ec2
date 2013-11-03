@@ -5,11 +5,8 @@ pushd /root/spark-ec2/hadoop
 
 /root/spark-ec2/copy-dir /etc/hadoop/conf
 
-if [[ -e /vol/persistent-hdfs ]] ; then
-  chmod -R 755 /vol/persistent-hdfs
-fi
 
-if [[ ! -e /vol/persistent-hdfs/dfs/name ]] ; then
+if [[ ! -e /mnt/ephemeral-hdfs/dfs/name ]] ; then
   echo "Formatting persistent HDFS namenode..."
   hadoop namenode -format -force -nonInteractive
 fi
