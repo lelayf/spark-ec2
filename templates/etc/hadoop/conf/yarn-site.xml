@@ -39,6 +39,10 @@
     <value>{{active_master}}:8088</value>
   </property>
   <property>
+    <name>yarn.web-proxy.address</name>
+    <value>{{active_master}}:8092</value>
+  </property>
+  <property>
     <name>yarn.nodemanager.address</name>
     <value>0.0.0.0:8099</value>
   </property>

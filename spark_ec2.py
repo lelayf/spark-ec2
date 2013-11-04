@@ -230,7 +230,7 @@ def launch_cluster(conn, opts, cluster_name):
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=slave_group)
     for cidr in opts.access_list:
       master_group.authorize('tcp', 22, 22, cidr)
-      master_group.authorize('tcp', 8080, 8081, cidr)
+      master_group.authorize('tcp', 8000, 20000, cidr)
       master_group.authorize('tcp', 50030, 50030, cidr)
       master_group.authorize('tcp', 50070, 50070, cidr)
       master_group.authorize('tcp', 60070, 60070, cidr)

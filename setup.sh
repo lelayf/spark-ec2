@@ -5,6 +5,7 @@ cd /root/spark-ec2
 
 # Load the environment variables specific to this AMI
 touch /root/.bash_profile
+echo "alias ll='ls -al --color'" > .bash_profile
 
 # Load the cluster variables set by the deploy script
 source ec2-variables.sh

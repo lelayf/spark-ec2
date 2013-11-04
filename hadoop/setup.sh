@@ -2,8 +2,6 @@
 
 pushd /root/spark-ec2/hadoop
 
-source ec2-variables.sh
-
 /root/spark-ec2/copy-dir /etc/hadoop/conf
 
 for node in $SLAVES $OTHER_MASTERS; do
@@ -27,6 +25,9 @@ wait
 for node in $SLAVES $MASTERS; do
   ssh -t $SSH_OPTS root@$node "/root/spark-ec2/hadoop/start-nodemanager.sh" & sleep 0.3
 done
+wait
+
+/etc/init.d/hadoop-yarn-proxyserver start
 wait
 
 popd
