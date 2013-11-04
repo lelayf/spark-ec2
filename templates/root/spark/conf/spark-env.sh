@@ -23,11 +23,10 @@ export SPARK_PUBLIC_DNS=`wget -q -O - http://169.254.169.254/latest/meta-data/pu
 SPARK_JAVA_OPTS+=" -Dspark.local.dir={{spark_local_dirs}}"
 export SPARK_JAVA_OPTS
 
-export HADOOP_HOME="/root/ephemeral-hdfs"
-export SPARK_LIBRARY_PATH="/root/ephemeral-hdfs/lib/native/"
+export SPARK_LIBRARY_PATH="$HADOOP_HOME/lib/native/"
 export SPARK_MASTER_IP={{active_master}}
 export MASTER=`cat /root/spark-ec2/cluster-url`
-export SPARK_CLASSPATH=$SPARK_CLASSPATH":/root/ephemeral-hdfs/conf"
+export SPARK_CLASSPATH="$SPARK_CLASSPATH:$HADOOP_CONF_DIR"
 export SPARK_MASTER_WEBUI_PORT=9090
 export SPARK_WORKER_WEBUI_PORT=9091
 
