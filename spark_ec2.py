@@ -225,8 +225,8 @@ def launch_cluster(conn, opts, cluster_name):
   print "Setting up security groups..."
   master_group = get_or_make_group(conn, cluster_name + "-master",opts)
   slave_group = get_or_make_group(conn, cluster_name + "-slaves",opts)
-  emr_master_group = get_or_make_group(conn, "ElasticMapReduce-master")
-  emr_slave_group = get_or_make_group(conn, "ElasticMapReduce-slave")
+  emr_master_group = get_or_make_group(conn, "ElasticMapReduce-master",opts)
+  emr_slave_group = get_or_make_group(conn, "ElasticMapReduce-slave",opts)
   if master_group.rules == []: # Group was just now created
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=master_group)
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=slave_group)
