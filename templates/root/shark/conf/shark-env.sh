@@ -9,8 +9,7 @@ SPARK_JAVA_OPTS+="-Dspark.kryoserializer.buffer.mb=10 "
 export SPARK_JAVA_OPTS
 
 export HIVE_HOME="/root/hive-0.9.0-bin"
-export HADOOP_HOME=/root/ephemeral-hdfs
-export HIVE_CONF_DIR=/root/ephemeral-hdfs/conf
+export HIVE_CONF_DIR=$HADOOP_CONF_DIR
 
 export MASTER=`cat /root/spark-ec2/cluster-url`
 export SPARK_HOME=/root/spark

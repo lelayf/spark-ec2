@@ -225,9 +225,13 @@ def launch_cluster(conn, opts, cluster_name):
   print "Setting up security groups..."
   master_group = get_or_make_group(conn, cluster_name + "-master",opts)
   slave_group = get_or_make_group(conn, cluster_name + "-slaves",opts)
+  emr_master_group = get_or_make_group(conn, "ElasticMapReduce-master")
+  emr_slave_group = get_or_make_group(conn, "ElasticMapReduce-slave")
   if master_group.rules == []: # Group was just now created
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=master_group)
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=slave_group)
+    master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=emr_master_group)
+    master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=emr_slave_group)
     for cidr in opts.access_list:
       master_group.authorize('tcp', 22, 22, cidr)
       master_group.authorize('tcp', 8000, 20000, cidr)
@@ -241,6 +245,8 @@ def launch_cluster(conn, opts, cluster_name):
   if slave_group.rules == []: # Group was just now created
     slave_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=master_group)
     slave_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=slave_group)
+    slave_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=emr_master_group)
+    slave_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=emr_slave_group)
     for cidr in opts.access_list:
       slave_group.authorize('tcp', 22, 22, cidr)
       slave_group.authorize('tcp', 8080, 8081, cidr)
@@ -444,7 +450,7 @@ def setup_cluster(conn, master_nodes, slave_nodes, opts, deploy_ssh_key):
   #modules = ['spark', 'shark', 'ephemeral-hdfs', 'persistent-hdfs', 
   #           'mapreduce', 'spark-standalone','sqoop']
 
-  modules = ['hadoop', 'spark', 'shark', 'spark-standalone','sqoop']           
+  modules = ['hadoop', 'spark', 'shark', 'spark-standalone']           
 
   if opts.hadoop_major_version == "1":
     modules = filter(lambda x: x != "mapreduce", modules)
