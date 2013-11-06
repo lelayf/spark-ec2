@@ -39,7 +39,7 @@ import boto.ec2.networkinterface
 from boto.vpc import VPCConnection
 
 # A URL prefix from which to fetch AMI information
-AMI_PREFIX = "https://raw.github.com/mesos/spark-ec2/v2/ami-list"
+AMI_PREFIX = "https://raw.github.com/lelayf/spark-ec2/cdh4.1.2/ami-list"
 
 # Configure and parse our command-line arguments
 def parse_args():
