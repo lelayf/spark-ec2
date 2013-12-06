@@ -373,8 +373,7 @@ def launch_cluster(conn, opts, cluster_name):
 
   master_interface = boto.ec2.networkinterface.NetworkInterfaceSpecification(subnet_id=opts.subnet_id,
                                                                              groups=[master_group.id],
-                                                                             associate_public_ip_address=True,
-                                                                             private_ip_address=opts.master_ip)
+                                                                             associate_public_ip_address=True)
 
   master_interfaces = boto.ec2.networkinterface.NetworkInterfaceCollection(master_interface)
 
