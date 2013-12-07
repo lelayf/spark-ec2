@@ -227,11 +227,13 @@ def launch_cluster(conn, opts, cluster_name):
   slave_group = get_or_make_group(conn, cluster_name + "-slaves",opts)
   emr_master_group = get_or_make_group(conn, "ElasticMapReduce-master",opts)
   emr_slave_group = get_or_make_group(conn, "ElasticMapReduce-slave",opts)
+  orchestrator_group = get_or_make_group(conn, "data-rundeck", opts)
   if master_group.rules == []: # Group was just now created
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=master_group)
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=slave_group)
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=emr_master_group)
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=emr_slave_group)
+    master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=orchestrator_group)
     for cidr in opts.access_list:
       master_group.authorize('tcp', 22, 22, cidr)
       master_group.authorize('tcp', 8000, 20000, cidr)
@@ -247,6 +249,7 @@ def launch_cluster(conn, opts, cluster_name):
     slave_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=slave_group)
     slave_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=emr_master_group)
     slave_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=emr_slave_group)
+    slave_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=orchestrator_group)
     for cidr in opts.access_list:
       slave_group.authorize('tcp', 22, 22, cidr)
       slave_group.authorize('tcp', 8080, 8081, cidr)
@@ -623,7 +626,7 @@ def ssh(host, opts, command):
   while True:
     try:
       return subprocess.check_call(
-        "ssh -t -o StrictHostKeyChecking=no -i %s %s@%s '%s'" %
+        "ssh -t -t -o StrictHostKeyChecking=no -i %s %s@%s '%s'" %
         (opts.identity_file, opts.user, host, command), shell=True)
     except subprocess.CalledProcessError as e:
       if (tries > 2):
