@@ -31,6 +31,7 @@ import tempfile
 import time
 import urllib2
 import argparse
+import collections
 from sys import stderr
 import boto
 from boto.ec2.blockdevicemapping import BlockDeviceMapping, EBSBlockDeviceType
@@ -216,18 +217,84 @@ def get_spark_ami(opts):
     sys.exit(1)
 
   return ami
+ 
+ 
+SecurityGroupRule = collections.namedtuple("SecurityGroupRule", ["ip_protocol", "from_port", "to_port", "cidr_ip", "src_group_name"])
+
+def modify_sg(c, group, rule,opts, authorize=False, revoke=False):
+    src_group = None
+    if rule.src_group_name:
+        src_group = get_or_make_group(c,rule.src_group_name,opts)
+ 
+    if authorize and not revoke:
+        print "Authorizing missing rule %s..."%(rule,)
+        group.authorize(ip_protocol=rule.ip_protocol,
+                        from_port=rule.from_port,
+                        to_port=rule.to_port,
+                        cidr_ip=rule.cidr_ip,
+                        src_group=src_group)
+    elif not authorize and revoke:
+        print "Revoking unexpected rule %s..."%(rule,)
+        group.revoke(ip_protocol=rule.ip_protocol,
+                     from_port=rule.from_port,
+                     to_port=rule.to_port,
+                     cidr_ip=rule.cidr_ip,
+                     src_group=src_group)
+
+def authorize(c, group, rule,opts):
+    """Authorize `rule` on `group`."""
+    return modify_sg(c, group, rule, opts, authorize=True)
+ 
+ 
+def revoke(c, group, rule,opts):
+    """Revoke `rule` on `group`."""
+    return modify_sg(c, group, rule, opts, revoke=True)
+ 
+ 
+def update_security_group(c, group, expected_rules,opts):
+    """
+    """
+    print 'Updating group "%s"...'%(group.name,)
+    import pprint
+    print "Expected Rules:"
+    pprint.pprint(expected_rules)
+ 
+    current_rules = []
+    for rule in group.rules:
+        if not rule.grants[0].cidr_ip:
+            current_rule = SecurityGroupRule(rule.ip_protocol,
+                              rule.from_port,
+                              rule.to_port,
+                              "0.0.0.0/0",
+                              rule.grants[0].group_id)
+        else:
+            current_rule = SecurityGroupRule(rule.ip_protocol,
+                              rule.from_port,
+                              rule.to_port,
+                              rule.grants[0].cidr_ip,
+                              None)
+            #pprint.pprint(vars(rule.grants[0])) 
+        current_rules.append(current_rule)
+ 
+    print "Current Rules:"
+    pprint.pprint(current_rules)
+    
+    for rule in expected_rules:
+        if rule not in current_rules:
+            authorize(c, group, rule,opts)
 
 # Launch a cluster of the given name, by setting up its security groups,
 # and then starting new instances in them.
 # Returns a tuple of EC2 reservation objects for the master and slaves
 # Fails if there already instances running in the cluster's groups.
+
 def launch_cluster(conn, opts, cluster_name):
   print "Setting up security groups..."
   master_group = get_or_make_group(conn, cluster_name + "-master",opts)
   slave_group = get_or_make_group(conn, cluster_name + "-slaves",opts)
   emr_master_group = get_or_make_group(conn, "ElasticMapReduce-master",opts)
   emr_slave_group = get_or_make_group(conn, "ElasticMapReduce-slave",opts)
-  orchestrator_group = get_or_make_group(conn, "data-rundeck", opts)
+  orchestrator_group = get_or_make_group(conn, "data-orchestrator", opts)
   if master_group.rules == []: # Group was just now created
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=master_group)
     master_group.authorize(ip_protocol='tcp',from_port=0,to_port=65535,src_group=slave_group)
@@ -257,7 +324,13 @@ def launch_cluster(conn, opts, cluster_name):
       slave_group.authorize('tcp', 50075, 50075, cidr)
       slave_group.authorize('tcp', 60060, 60060, cidr)
       slave_group.authorize('tcp', 60075, 60075, cidr)
-      
+  orch_rules = [ SecurityGroupRule("tcp", "0", "65535", "0.0.0.0/0", cluster_name + "-master"),
+                 SecurityGroupRule("tcp", "0", "65535", "0.0.0.0/0", cluster_name + "-slaves")]
+  for cidr in opts.access_list:
+    orch_rules.append(SecurityGroupRule("tcp", "4440", "4440", cidr,None))
+    orch_rules.append(SecurityGroupRule("tcp", "22", "22", cidr,None))
+  update_security_group(conn, orchestrator_group, orch_rules,opts)
+
 
   # Check if instances are already running in our groups
   active_nodes = get_existing_cluster(conn, opts, cluster_name,
