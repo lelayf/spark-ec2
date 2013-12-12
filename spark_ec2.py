@@ -324,8 +324,8 @@ def launch_cluster(conn, opts, cluster_name):
       slave_group.authorize('tcp', 50075, 50075, cidr)
       slave_group.authorize('tcp', 60060, 60060, cidr)
       slave_group.authorize('tcp', 60075, 60075, cidr)
-  orch_rules = [ SecurityGroupRule("tcp", "0", "65535", "0.0.0.0/0", cluster_name + "-master"),
-                 SecurityGroupRule("tcp", "0", "65535", "0.0.0.0/0", cluster_name + "-slaves")]
+  orch_rules = [ SecurityGroupRule("tcp", "0", "65535", "0.0.0.0/0", master_group.id),
+                 SecurityGroupRule("tcp", "0", "65535", "0.0.0.0/0", slave_group.id)]
   #  for cidr in opts.access_list:
   #  orch_rules.append(SecurityGroupRule("tcp", "4440", "4440", cidr,None))
   #  orch_rules.append(SecurityGroupRule("tcp", "22", "22", cidr,None))
